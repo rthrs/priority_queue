@@ -4,46 +4,83 @@
 template<typename K, typename V>
 class PriorityQueue {
 
+private:
+   
+   using ptr_key_t = std::shared_ptr<K>;
+   using ptr_value_t = std::shared_ptr<V>;
+   using map_key_t = std::map<ptr_key_t, std::set<ptr_value_t>>;
+   using map_value_t = std::map<ptr_value_t, std::set<ptr_key_t>>;
+
+   map_key_t map_key;
+   map_value_t map_value;
+   size_type counter;
+
+
 public:
+   
+   using size_type = size_t;
+   using key_type = K;
+   using value_type = V;
 
    /**
-    * Konstruktor bezparametrowy tworzący pustą kolejkę [O(1)]
-    */
-   PriorityQueue()
-
-   /**
-    * Konstruktor kopiujący [O(queue.size())]
-    */
-   PriorityQueue(const PriorityQueue<K, V>& queue)
-
-   /**
-    * Konstruktor przenoszący [O(1)]
-    */
-   PriorityQueue(PriorityQueue<K, V>&& queue)
-
-   /**
-    * Operator przypisania [O(queue.size()) dla użycia P = Q, a O(1) dla użycia
-    * P = move(Q)]
-    */
-   PriorityQueue<K, V>& operator=(PriorityQueue<K, V> queue)
-
-   /**
-    * Metoda zwracająca true wtedy i tylko wtedy, gdy kolejka jest pusta [O(1)]
-    */
-   bool empty() const
-
-   /**
-    * Metoda zwracająca liczbę par (klucz, wartość) przechowywanych w kolejce 
+    * Konstruktor bezparametrowy tworzący pustą kolejkę.
     * [O(1)]
     */
-   size_type size() const
+   PriorityQueue() {
+      counter = 0;
+   }
+
+   /**
+    * Konstruktor kopiujący. 
+    * [O(queue.size())]
+    */
+   PriorityQueue(const PriorityQueue<K, V>& queue) {
+      map_key_t tmp_key = 
+      map_value_t tmp_value =
+ 
+   }
+
+   /**
+    * Konstruktor przenoszący. 
+    * [O(1)]
+    */
+   PriorityQueue(PriorityQueue<K, V>&& queue) {
+      map_key = std::move(queue.map_key); 
+      map_value = std::move(queue.map_value);
+      counter = queue.counter; 
+   }
+
+   /**
+    * Operator przypisania. 
+    * [O(queue.size()) dla użycia P = Q, a O(1) dla użycia P = move(Q)]
+    */
+   PriorityQueue<K, V>& operator=(PriorityQueue<K, V> queue) {
+      queue.swap(*this);
+      return *this;
+   }
+
+   /**
+    * Metoda zwracająca true wtedy i tylko wtedy, gdy kolejka jest pusta. 
+    * [O(1)]
+    */
+   bool empty() const {
+      return counter == 0;
+   }
+
+   /**
+    * Metoda zwracająca liczbę par (klucz, wartość) przechowywanych w kolejce.
+    * [O(1)]
+    */
+   size_type size() const {
+      return counter;
+   }
 
    /**
     * Metoda wstawiająca do kolejki parę o kluczu key i wartości value
     * [O(log size())] (dopuszczamy możliwość występowania w kolejce wielu
     * par o tym samym kluczu)
     */
-   void insert(const K& key, const V& value)
+   void insert(const K& key, const V& value) {
 
    /**
     * Metody zwracające odpowiednio najmniejszą i największą wartość 
@@ -91,9 +128,11 @@ public:
     * Metoda zamieniającą zawartość kolejki z podaną kolejką queue (tak jak
     * większość kontenerów w bibliotece standardowej) [O(1)]
     */
-   void swap(PriorityQueue<K, V>& queue)
-
-private:
+   void swap(PriorityQueue<K, V>& queue) {
+      std::swap(map_key, queue.map_key);
+      std::swap(map_value, queue.map_value);
+      std::swap(counter, queue.map_counter);
+   }
 
 }
 
