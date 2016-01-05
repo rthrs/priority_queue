@@ -21,6 +21,19 @@ int main() {
     assert(P.maxValue() == 42);
     assert(P.minKey() == 2);
     assert(P.minValue() == 13);
+{
+    P.insert(1, 42);
+
+    assert(P.size() == 3);
+
+    P.insert(1, 100);
+    P.insert(2, 2);
+
+    assert(P.maxKey() == 1);
+    assert(P.maxValue() == 100);
+    assert(P.minKey() == 2);
+    assert(P.minValue() == 2);
+}
 /*
     PriorityQueue<int, int> Q(f(P));
 
