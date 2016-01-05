@@ -15,13 +15,13 @@ int main() {
 
     P.insert(1, 42);
     P.insert(2, 13);
-/*
+
     assert(P.size() == 2);
     assert(P.maxKey() == 1);
     assert(P.maxValue() == 42);
     assert(P.minKey() == 2);
     assert(P.minValue() == 13);
-
+/*
     PriorityQueue<int, int> Q(f(P));
 
     Q.deleteMax();

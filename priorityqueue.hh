@@ -126,20 +126,6 @@ private:
    using map_key_t = std::map<ptr_key_t, set_value_t, LessPQ<ptr_key_t>>;
    using map_value_t = std::map<ptr_value_t, set_key_t, LessPQ<ptr_value_t>>;
 
-/*
-typename map_key_t::const_iterator find_key(const map_key_t& map, 
-                                            const ptr_key_t& base) {
-  auto it = std::lower_bound(                                 
-    map.begin(), map.end(), base,
-    [](const typename map_key_t::value_type& lhs, const ptr_key_t& rhs)
-    { return *lhs < *rhs; }
-  );
-  if (it != map.end() && *it->first == *base)
-    return it;
-  else
-    return map.end();
-}
-*/
    map_key_t map_key;
    map_value_t map_value;
    size_type counter = 0;
@@ -178,33 +164,18 @@ typename PriorityQueue<K, V>::size_type PriorityQueue<K, V>::size() const {
 }
 
 
-//#include <iostream>
 
 template<typename K, typename V>
 void PriorityQueue<K, V>::insert(const K& key, const V& value) {
    ptr_key_t tmp_k = std::make_shared<K>(key);
    ptr_value_t tmp_v = std::make_shared<V>(value);
-/*
+
    map_key[tmp_k].insert(tmp_v);
-   map_key[tmp_v].insert(tmp_k);
+   map_value[tmp_v].insert(tmp_k);
+/*
+#include <iostream>
 std::cout << map_key.size() << std::endl;
 std::cout << map_value.size() << std::endl;
-
-   if (it_k == map_key.end()) {
-      set_value_t tmp_s;
-      tmp_s.insert(tmp_v);
-      map_key.insert(std::make_pair(tmp_k, tmp_s));
-   } else {
-      it_k->second.insert(tmp_v);
-   }
-   auto it_v = map_value.find(tmp_v);
-   if (it_v == map_key.end()) {
-      set_key_t tmp_s;
-      tmp_s.insert(tmp_k);
-      map_key.insert(std::make_pair(tmp_v, tmp_s));
-   } else {
-      it_v->second.insert(tmp_k);
-   }
 */
    ++counter;
 }
