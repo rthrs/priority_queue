@@ -138,6 +138,7 @@ PriorityQueue<K, V>::PriorityQueue(const PriorityQueue<K, V>& queue) {
    map_value_t tmp_value(queue.map_value);
    map_key.swap(tmp_key);
    map_value.swap(tmp_value);
+   counter = queue.counter; 
 }
 
 template<typename K, typename V>

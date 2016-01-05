@@ -37,6 +37,12 @@ int main() {
 
     PriorityQueue<int, int> Q(f(P));
 
+    assert(Q.size() == 2);
+    assert(Q.maxKey() == 1);
+    assert(Q.maxValue() == 42);
+    assert(Q.minKey() == 2);
+    assert(Q.minValue() == 13);
+
     Q.deleteMax();
     Q.deleteMin();
     Q.deleteMin();
