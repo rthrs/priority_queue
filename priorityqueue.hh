@@ -204,12 +204,37 @@ const K& PriorityQueue<K, V>::maxKey() const {
 
 template<typename K, typename V>
 void PriorityQueue<K, V>::deleteMin() {
-
+    if (empty())
+      return;
+   auto it_k = map_value.cbegin()->second.cbegin();
+   ptr_key_t tmp_k = *it_k;
+   ptr_value_t tmp_v = map_value.cbegin()->first;
+   map_value.begin()->second.erase(it_k);
+   if (map_value.begin()->second.empty())
+      map_value.erase(map_value.cbegin());
+   // TODO kilka razy logarytmiczen operacje, moze da sie raz na iteratorze
+   map_key[tmp_k].erase(tmp_v);
+   if (map_key[tmp_k].empty())
+      map_key.erase(tmp_k);
+   --counter;
 }
 
 template<typename K, typename V>
 void PriorityQueue<K, V>::deleteMax() {
-
+   if (empty())
+      return;
+   // TODO copy paste
+   auto it_k = map_value.crbegin()->second.cbegin();
+   ptr_key_t tmp_k = *it_k;
+   ptr_value_t tmp_v = map_value.crbegin()->first;
+   map_value.rbegin()->second.erase(it_k);
+   if (map_value.crbegin()->second.empty())
+      map_value.erase(--map_value.crbegin().base());
+   // TODO kilka razy logarytmiczen operacje, moze da sie raz na iteratorze
+   map_key[tmp_k].erase(tmp_v);
+   if (map_key[tmp_k].empty())
+      map_key.erase(tmp_k);
+   --counter;
 }
 
 template<typename K, typename V>
@@ -226,7 +251,7 @@ template<typename K, typename V>
 void PriorityQueue<K, V>::swap(PriorityQueue<K, V>& queue) {
    map_key.swap(queue.map_key);
    map_value.swap(queue.map_value);
-   std::swap(counter, queue.map_counter);
+   std::swap(counter, queue.counter);
 }
 
 // TODO operatory porównania... 

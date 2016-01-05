@@ -21,7 +21,7 @@ int main() {
     assert(P.maxValue() == 42);
     assert(P.minKey() == 2);
     assert(P.minValue() == 13);
-{
+/*{
     P.insert(1, 42);
 
     assert(P.size() == 3);
@@ -33,8 +33,8 @@ int main() {
     assert(P.maxValue() == 100);
     assert(P.minKey() == 2);
     assert(P.minValue() == 2);
-}
-/*
+}*/
+
     PriorityQueue<int, int> Q(f(P));
 
     Q.deleteMax();
@@ -51,7 +51,7 @@ int main() {
 
     PriorityQueue<int, int> S;
     S = R;
-
+/*
     try
     {
         S.changeValue(4, 400);
