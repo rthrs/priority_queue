@@ -1,6 +1,8 @@
 #ifndef __PRIORITYQUEUE_HH__
 #define __PRIORITYQUEUE_HH__
 
+// TODO Stworzyć wyjątki.
+
 template<typename K, typename V>
 class PriorityQueue {
 
@@ -8,6 +10,7 @@ private:
    
    using ptr_key_t = std::shared_ptr<K>;
    using ptr_value_t = std::shared_ptr<V>;
+   // TODO stworzyc i dodac tutaj komparator (zeby zrobic dereferencje pointera)
    using map_key_t = std::map<ptr_key_t, std::set<ptr_value_t>>;
    using map_value_t = std::map<ptr_value_t, std::set<ptr_key_t>>;
 
@@ -35,9 +38,11 @@ public:
     * [O(queue.size())]
     */
    PriorityQueue(const PriorityQueue<K, V>& queue) {
-      map_key_t tmp_key = 
-      map_value_t tmp_value =
- 
+   // TODO czy blok try catch jest potrzebny i czy wgl tak moze byc ?
+      map_key_t tmp_key(queue.map_key);
+      map_value_t tmp_value(queue.map_value);
+      map_key.swap(tmp_key);
+      map_value.swap(tmp_value);
    }
 
    /**
@@ -82,14 +87,21 @@ public:
     */
    void insert(const K& key, const V& value) {
 
+   }
+
    /**
     * Metody zwracające odpowiednio najmniejszą i największą wartość 
     * przechowywaną w kolejce [O(1)]; w przypadku wywołania którejś z tych metod
     * na pustej strukturze powinien zostać zgłoszony wyjątek 
     * PriorityQueueEmptyException
     */
-   const V& minValue() const
-   const V& maxValue() const
+   const V& minValue() const {
+      return *map_value.cbegin()->first;
+   }
+   
+   const V& maxValue() const {
+      return *map_value.crbegin()->first;
+   }
 
    /**
     * Metody zwracające klucz o przypisanej odpowiednio najmniejszej lub
@@ -97,15 +109,28 @@ public:
     * na pustej strukturze powinien zostać zgłoszony wyjątek
     * PriorityQueueEmptyException
     */
-   const K& minKey() const
-   const K& maxKey() const
+   // TODO chyba jesli jest kilka takich kluczy to moze byc dowolny right?
+   // TODO teraz zawsze zwracany klucz o najmniejszej wartosci, change that?
+   const K& minKey() const {
+      return *map_value.cbegin()->second.begin();
+   }
+   
+
+   const K& maxKey() const {
+      return *map_value.crbegin()->second.begin();
+   }
 
    /**
     * Metody usuwające z kolejki jedną parę o odpowiednio najmniejszej lub
     * największej wartości [O(log size())]
     */
-   void deleteMin()
-   void deleteMax()
+   void deleteMin() {
+
+   }
+   
+   void deleteMax() {
+
+   }
 
    /**
     * Metoda zmieniająca dotychczasową wartość przypisaną kluczowi key na nową
@@ -115,22 +140,26 @@ public:
     * par o kluczu key, zmienia wartość w dowolnie wybranej parze o podanym 
     * kluczu
     */
-   void changeValue(const K& key, const V& value)
+   void changeValue(const K& key, const V& value) {
+   
+   }
 
    /**
     * Metoda scalająca zawartość kolejki z podaną kolejką queue; ta operacja 
     * usuwa wszystkie elementy z kolejki queue i wstawia je do kolejki *this
     * [O(size() + queue.size() * log (queue.size() + size()))]
     */
-   void merge(PriorityQueue<K, V>& queue)
+   void merge(PriorityQueue<K, V>& queue) {
+
+   }
 
    /**
     * Metoda zamieniającą zawartość kolejki z podaną kolejką queue (tak jak
     * większość kontenerów w bibliotece standardowej) [O(1)]
     */
    void swap(PriorityQueue<K, V>& queue) {
-      std::swap(map_key, queue.map_key);
-      std::swap(map_value, queue.map_value);
+      map_key.swap(queue.map_key);
+      map_value.swap(queue.map_value);
       std::swap(counter, queue.map_counter);
    }
 
