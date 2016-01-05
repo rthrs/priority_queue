@@ -1,23 +1,14 @@
 #ifndef __PRIORITYQUEUE_HH__
 #define __PRIORITYQUEUE_HH__
 
+#include <memory>
+#include <map>
+#include <set>
+
 // TODO Stworzyć wyjątki.
 
 template<typename K, typename V>
 class PriorityQueue {
-
-private:
-   
-   using ptr_key_t = std::shared_ptr<K>;
-   using ptr_value_t = std::shared_ptr<V>;
-   // TODO stworzyc i dodac tutaj komparator (zeby zrobic dereferencje pointera)
-   using map_key_t = std::map<ptr_key_t, std::set<ptr_value_t>>;
-   using map_value_t = std::map<ptr_value_t, std::set<ptr_key_t>>;
-
-   map_key_t map_key;
-   map_value_t map_value;
-   size_type counter;
-
 
 public:
    
@@ -29,65 +20,44 @@ public:
     * Konstruktor bezparametrowy tworzący pustą kolejkę.
     * [O(1)]
     */
-   PriorityQueue() {
-      counter = 0;
-   }
+   PriorityQueue() {}
 
    /**
     * Konstruktor kopiujący. 
     * [O(queue.size())]
     */
-   PriorityQueue(const PriorityQueue<K, V>& queue) {
-   // TODO czy blok try catch jest potrzebny i czy wgl tak moze byc ?
-      map_key_t tmp_key(queue.map_key);
-      map_value_t tmp_value(queue.map_value);
-      map_key.swap(tmp_key);
-      map_value.swap(tmp_value);
-   }
+   PriorityQueue(const PriorityQueue<K, V>& queue);
 
    /**
     * Konstruktor przenoszący. 
     * [O(1)]
     */
-   PriorityQueue(PriorityQueue<K, V>&& queue) {
-      map_key = std::move(queue.map_key); 
-      map_value = std::move(queue.map_value);
-      counter = queue.counter; 
-   }
+   PriorityQueue(PriorityQueue<K, V>&& queue);
 
    /**
     * Operator przypisania. 
     * [O(queue.size()) dla użycia P = Q, a O(1) dla użycia P = move(Q)]
     */
-   PriorityQueue<K, V>& operator=(PriorityQueue<K, V> queue) {
-      queue.swap(*this);
-      return *this;
-   }
+   PriorityQueue<K, V>& operator=(PriorityQueue<K, V> queue);
 
    /**
     * Metoda zwracająca true wtedy i tylko wtedy, gdy kolejka jest pusta. 
     * [O(1)]
     */
-   bool empty() const {
-      return counter == 0;
-   }
+   bool empty() const;
 
    /**
     * Metoda zwracająca liczbę par (klucz, wartość) przechowywanych w kolejce.
     * [O(1)]
     */
-   size_type size() const {
-      return counter;
-   }
+   size_type size() const;
 
    /**
     * Metoda wstawiająca do kolejki parę o kluczu key i wartości value
     * [O(log size())] (dopuszczamy możliwość występowania w kolejce wielu
     * par o tym samym kluczu)
     */
-   void insert(const K& key, const V& value) {
-
-   }
+   void insert(const K& key, const V& value);
 
    /**
     * Metody zwracające odpowiednio najmniejszą i największą wartość 
@@ -95,13 +65,9 @@ public:
     * na pustej strukturze powinien zostać zgłoszony wyjątek 
     * PriorityQueueEmptyException
     */
-   const V& minValue() const {
-      return *map_value.cbegin()->first;
-   }
+   const V& minValue() const;
    
-   const V& maxValue() const {
-      return *map_value.crbegin()->first;
-   }
+   const V& maxValue() const;
 
    /**
     * Metody zwracające klucz o przypisanej odpowiednio najmniejszej lub
@@ -109,28 +75,17 @@ public:
     * na pustej strukturze powinien zostać zgłoszony wyjątek
     * PriorityQueueEmptyException
     */
-   // TODO chyba jesli jest kilka takich kluczy to moze byc dowolny right?
-   // TODO teraz zawsze zwracany klucz o najmniejszej wartosci, change that?
-   const K& minKey() const {
-      return *map_value.cbegin()->second.begin();
-   }
-   
+   const K& minKey() const;
 
-   const K& maxKey() const {
-      return *map_value.crbegin()->second.begin();
-   }
+   const K& maxKey() const;
 
    /**
     * Metody usuwające z kolejki jedną parę o odpowiednio najmniejszej lub
     * największej wartości [O(log size())]
     */
-   void deleteMin() {
-
-   }
+   void deleteMin();
    
-   void deleteMax() {
-
-   }
+   void deleteMax();
 
    /**
     * Metoda zmieniająca dotychczasową wartość przypisaną kluczowi key na nową
@@ -140,30 +95,121 @@ public:
     * par o kluczu key, zmienia wartość w dowolnie wybranej parze o podanym 
     * kluczu
     */
-   void changeValue(const K& key, const V& value) {
-   
-   }
+   void changeValue(const K& key, const V& value);
 
    /**
     * Metoda scalająca zawartość kolejki z podaną kolejką queue; ta operacja 
     * usuwa wszystkie elementy z kolejki queue i wstawia je do kolejki *this
     * [O(size() + queue.size() * log (queue.size() + size()))]
     */
-   void merge(PriorityQueue<K, V>& queue) {
-
-   }
+   void merge(PriorityQueue<K, V>& queue);
 
    /**
     * Metoda zamieniającą zawartość kolejki z podaną kolejką queue (tak jak
     * większość kontenerów w bibliotece standardowej) [O(1)]
     */
-   void swap(PriorityQueue<K, V>& queue) {
-      map_key.swap(queue.map_key);
-      map_value.swap(queue.map_value);
-      std::swap(counter, queue.map_counter);
-   }
+   void swap(PriorityQueue<K, V>& queue);
+
+private:
+   
+   using ptr_key_t = std::shared_ptr<K>;
+   using ptr_value_t = std::shared_ptr<V>;
+   // TODO stworzyc i dodac tutaj komparator (zeby zrobic dereferencje pointera)
+   using map_key_t = std::map<ptr_key_t, std::set<ptr_value_t>>;
+   using map_value_t = std::map<ptr_value_t, std::set<ptr_key_t>>;
+
+   map_key_t map_key;
+   map_value_t map_value;
+   size_type counter = 0;
+};
+
+template<typename K, typename V>
+PriorityQueue<K, V>::PriorityQueue(const PriorityQueue<K, V>& queue) {
+// TODO czy blok try catch jest potrzebny i czy wgl tak moze byc ?
+   map_key_t tmp_key(queue.map_key);
+   map_value_t tmp_value(queue.map_value);
+   map_key.swap(tmp_key);
+   map_value.swap(tmp_value);
+}
+
+template<typename K, typename V>
+PriorityQueue<K, V>::PriorityQueue(PriorityQueue<K, V>&& queue) {
+   map_key = std::move(queue.map_key); 
+   map_value = std::move(queue.map_value);
+   counter = queue.counter; 
+}
+
+template<typename K, typename V>
+PriorityQueue<K, V>& PriorityQueue<K, V>::operator=(PriorityQueue<K, V> queue) {
+   queue.swap(*this);
+   return *this;
+}
+
+template<typename K, typename V>
+bool PriorityQueue<K, V>::empty() const {
+   return counter == 0;
+}
+
+template<typename K, typename V>
+typename PriorityQueue<K, V>::size_type PriorityQueue<K, V>::size() const {
+   return counter;
+}
+
+template<typename K, typename V>
+void PriorityQueue<K, V>::insert(const K& key, const V& value) {
 
 }
+
+template<typename K, typename V> // K?
+const V& PriorityQueue<K, V>::minValue() const {
+   return *map_value.cbegin()->first;
+}
+
+template<typename K, typename V> // K?
+const V& PriorityQueue<K, V>::maxValue() const {
+   return *map_value.crbegin()->first;
+}
+
+// TODO chyba jesli jest kilka takich kluczy to moze byc dowolny right?
+// TODO teraz zawsze zwracany klucz o najmniejszej wartosci, change that?
+template<typename K, typename V> // V?
+const K& PriorityQueue<K, V>::minKey() const {
+   return *map_value.cbegin()->second.begin();
+}
+
+template<typename K, typename V> // V?
+const K& PriorityQueue<K, V>::maxKey() const {
+   return *map_value.crbegin()->second.begin();
+}
+
+template<typename K, typename V>
+void PriorityQueue<K, V>::deleteMin() {
+
+}
+
+template<typename K, typename V>
+void PriorityQueue<K, V>::deleteMax() {
+
+}
+
+template<typename K, typename V>
+void PriorityQueue<K, V>::changeValue(const K& key, const V& value) {
+
+}
+
+template<typename K, typename V>
+void PriorityQueue<K, V>::merge(PriorityQueue<K, V>& queue) {
+
+}
+
+template<typename K, typename V>
+void PriorityQueue<K, V>::swap(PriorityQueue<K, V>& queue) {
+   map_key.swap(queue.map_key);
+   map_value.swap(queue.map_value);
+   std::swap(counter, queue.map_counter);
+}
+
+// TODO operatory porównania... 
 
 #endif /* __PRIORITYQUEUE_HH__ */
 
