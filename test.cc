@@ -12,10 +12,10 @@ PriorityQueue<int, int> f(PriorityQueue<int, int> q)
 int main() {
     PriorityQueue<int, int> P = f(PriorityQueue<int, int>());
     assert(P.empty());
-/*
+
     P.insert(1, 42);
     P.insert(2, 13);
-
+/*
     assert(P.size() == 2);
     assert(P.maxKey() == 1);
     assert(P.maxValue() == 42);
