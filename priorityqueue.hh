@@ -5,7 +5,18 @@
 #include <map>
 #include <set>
 
-// TODO Stworzyć wyjątki.
+// TODO noexcept zamiast throw() ?
+class PriorityQueueEmptyException: public std::exception {
+   virtual const char* what() const throw() {
+      return "PriorityQueueEmptyException";
+   }
+};
+
+class PriorityQueueNotFoundException: public std::exception {
+   virtual const char* what() const throw() {
+      return "PriorityQueueNotFoundException";
+   }
+};
 
 template<typename K, typename V>
 class PriorityQueue {
@@ -183,11 +194,15 @@ std::cout << map_value.size() << std::endl;
 
 template<typename K, typename V> // K?
 const V& PriorityQueue<K, V>::minValue() const {
+   if (empty())
+      throw PriorityQueueEmptyException();
    return *map_value.cbegin()->first;
 }
 
 template<typename K, typename V> // K?
 const V& PriorityQueue<K, V>::maxValue() const {
+   if (empty())
+      throw PriorityQueueEmptyException();
    return *map_value.crbegin()->first;
 }
 
@@ -195,11 +210,15 @@ const V& PriorityQueue<K, V>::maxValue() const {
 // TODO teraz zawsze zwracany klucz o najmniejszej wartosci, change that?
 template<typename K, typename V> // V?
 const K& PriorityQueue<K, V>::minKey() const {
+   if (empty())
+      throw PriorityQueueEmptyException();
    return **map_value.cbegin()->second.begin();
 }
 
 template<typename K, typename V> // V?
 const K& PriorityQueue<K, V>::maxKey() const {
+   if (empty())
+      throw PriorityQueueEmptyException();
    return **map_value.crbegin()->second.begin();
 }
 
@@ -240,6 +259,7 @@ void PriorityQueue<K, V>::deleteMax() {
 
 template<typename K, typename V>
 void PriorityQueue<K, V>::changeValue(const K& key, const V& value) {
+   
 
 }
 
