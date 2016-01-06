@@ -25,18 +25,34 @@ public:
    }
 };
 
+// Predeklaracje operatorów dla oddzielenia interfejsu od implementacji.
 template<typename K, typename V>
 class PriorityQueue;
 
 template<typename K, typename V>
 bool operator==(const PriorityQueue<K, V>& lhs, 
                 const PriorityQueue<K, V>& rhs);
-
+/*
 template<typename K, typename V>
 bool operator!=(const PriorityQueue<K, V>& lhs, 
                 const PriorityQueue<K, V>& rhs);
 
+template<typename K, typename V>
+bool operator<(const PriorityQueue<K, V>& lhs, 
+               const PriorityQueue<K, V>& rhs);
 
+template<typename K, typename V>
+bool operator<=(const PriorityQueue<K, V>& lhs, 
+                const PriorityQueue<K, V>& rhs);
+
+template<typename K, typename V>
+bool operator>(const PriorityQueue<K, V>& lhs, 
+               const PriorityQueue<K, V>& rhs);
+
+template<typename K, typename V>
+bool operator>=(const PriorityQueue<K, V>& lhs, 
+                const PriorityQueue<K, V>& rhs);
+*/
 template<typename K, typename V>
 class PriorityQueue {
 
@@ -142,11 +158,22 @@ public:
 
    friend bool operator== <>(const PriorityQueue<K, V>& lhs, 
                              const PriorityQueue<K, V>& rhs);
-
+/*
    friend bool operator!= <>(const PriorityQueue<K, V>& lhs, 
                              const PriorityQueue<K, V>& rhs);
+   
+   friend bool operator< <>(const PriorityQueue<K, V>& lhs, 
+                            const PriorityQueue<K, V>& rhs);
 
+   friend bool operator<= <>(const PriorityQueue<K, V>& lhs, 
+                             const PriorityQueue<K, V>& rhs);
 
+   friend bool operator> <>(const PriorityQueue<K, V>& lhs, 
+                            const PriorityQueue<K, V>& rhs);
+
+   friend bool operator>= <>(const PriorityQueue<K, V>& lhs, 
+                             const PriorityQueue<K, V>& rhs);
+*/
 private:
 
    template<typename T>
@@ -335,7 +362,31 @@ bool operator!=(const PriorityQueue<K, V>& lhs,
    return !(lhs == rhs);
 }
 
-// TODO operatory < > etc...
+// TODO zaślepki
+
+template<typename K, typename V>
+bool operator<(const PriorityQueue<K, V>& lhs, 
+               const PriorityQueue<K, V>& rhs) {
+   return true;
+}
+
+template<typename K, typename V>
+bool operator<=(const PriorityQueue<K, V>& lhs, 
+                const PriorityQueue<K, V>& rhs) {
+   return true;
+}
+
+template<typename K, typename V>
+bool operator>(const PriorityQueue<K, V>& lhs, 
+               const PriorityQueue<K, V>& rhs) {
+   return true;
+}
+
+template<typename K, typename V>
+bool operator>=(const PriorityQueue<K, V>& lhs, 
+                const PriorityQueue<K, V>& rhs) {
+   return true;
+}
 
 #endif /* __PRIORITYQUEUE_HH__ */
 
