@@ -26,6 +26,18 @@ public:
 };
 
 template<typename K, typename V>
+class PriorityQueue;
+
+template<typename K, typename V>
+bool operator==(const PriorityQueue<K, V>& lhs, 
+                const PriorityQueue<K, V>& rhs);
+
+template<typename K, typename V>
+bool operator!=(const PriorityQueue<K, V>& lhs, 
+                const PriorityQueue<K, V>& rhs);
+
+
+template<typename K, typename V>
 class PriorityQueue {
 
 public:
@@ -127,6 +139,13 @@ public:
     * większość kontenerów w bibliotece standardowej) [O(1)]
     */
    void swap(PriorityQueue<K, V>& queue);
+
+   friend bool operator== <>(const PriorityQueue<K, V>& lhs, 
+                             const PriorityQueue<K, V>& rhs);
+
+   friend bool operator!= <>(const PriorityQueue<K, V>& lhs, 
+                             const PriorityQueue<K, V>& rhs);
+
 
 private:
 
@@ -285,7 +304,7 @@ void PriorityQueue<K, V>::changeValue(const K& key, const V& value) {
 
 template<typename K, typename V>
 void PriorityQueue<K, V>::merge(PriorityQueue<K, V>& queue) {
-   // Marge *this z queue.
+   // Merge *this z queue.
    map_key.insert(queue.map_key.begin(), queue.map_key.end()); 
    map_value.insert(queue.map_value.begin(), queue.map_value.end()); 
    counter += queue.counter;
@@ -302,7 +321,21 @@ void PriorityQueue<K, V>::swap(PriorityQueue<K, V>& queue) {
    std::swap(counter, queue.counter);
 }
 
-// TODO operatory porównania... 
+template<typename K, typename V>
+bool operator==(const PriorityQueue<K, V>& lhs, 
+                const PriorityQueue<K, V>& rhs) {
+   if (lhs.size() != rhs.size())
+      return false;
+   return (lhs.map_key == rhs.map_key) && (lhs.map_value == rhs.map_value);
+}
+
+template<typename K, typename V>
+bool operator!=(const PriorityQueue<K, V>& lhs, 
+                const PriorityQueue<K, V>& rhs) {
+   return !(lhs == rhs);
+}
+
+// TODO operatory < > etc...
 
 #endif /* __PRIORITYQUEUE_HH__ */
 

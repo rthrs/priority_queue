@@ -127,7 +127,7 @@ int main() {
 
     S = R;
     std::swap(R, T);
-/*
+
     assert(T == S);
     assert(T != R);
 
@@ -136,6 +136,6 @@ int main() {
     assert(T == R);
 
     std::cout << "ALL OK!" << std::endl;
-*/
+
     return 0;
 }
