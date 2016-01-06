@@ -1,3 +1,9 @@
+/*============================================================================*/
+/*                  JNP Grupa 7 - Zadanie 5 - Priority Queue                  */
+/*                        Katarzyna Herba  - kh359525                         */
+/*                        Artur Myszkowski - am347189                         */
+/*============================================================================*/
+
 #ifndef __PRIORITYQUEUE_HH__
 #define __PRIORITYQUEUE_HH__
 
@@ -5,6 +11,12 @@
 #include <map>
 #include <set>
 #include <cassert> //
+
+
+/*============================================================================*/
+/*                                 Wyjątki.                                   */
+/*============================================================================*/
+
 
 // TODO noexcept zamiast throw() ?
 class PriorityQueueEmptyException: public std::exception {
@@ -25,6 +37,12 @@ public:
    }
 };
 
+
+/*============================================================================*/
+/*                                Interfejs.                                  */
+/*============================================================================*/
+
+
 // Predeklaracje operatorów dla oddzielenia interfejsu od implementacji.
 template<typename K, typename V>
 class PriorityQueue;
@@ -36,11 +54,11 @@ bool operator==(const PriorityQueue<K, V>& lhs,
 template<typename K, typename V>
 bool operator!=(const PriorityQueue<K, V>& lhs, 
                 const PriorityQueue<K, V>& rhs);
-
+*/
 template<typename K, typename V>
 bool operator<(const PriorityQueue<K, V>& lhs, 
                const PriorityQueue<K, V>& rhs);
-
+/*
 template<typename K, typename V>
 bool operator<=(const PriorityQueue<K, V>& lhs, 
                 const PriorityQueue<K, V>& rhs);
@@ -161,10 +179,10 @@ public:
 /*
    friend bool operator!= <>(const PriorityQueue<K, V>& lhs, 
                              const PriorityQueue<K, V>& rhs);
-   
+*/   
    friend bool operator< <>(const PriorityQueue<K, V>& lhs, 
                             const PriorityQueue<K, V>& rhs);
-
+/*
    friend bool operator<= <>(const PriorityQueue<K, V>& lhs, 
                              const PriorityQueue<K, V>& rhs);
 
@@ -185,8 +203,8 @@ private:
    
    using ptr_key_t = std::shared_ptr<K>;
    using ptr_value_t = std::shared_ptr<V>;
-   using set_key_t = std::set<ptr_key_t, LessPQ<ptr_key_t>>;
-   using set_value_t = std::set<ptr_value_t, LessPQ<ptr_value_t>>;
+   using set_key_t = std::multiset<ptr_key_t, LessPQ<ptr_key_t>>;
+   using set_value_t = std::multiset<ptr_value_t, LessPQ<ptr_value_t>>;
    using map_key_t = std::map<ptr_key_t, set_value_t, LessPQ<ptr_key_t>>;
    using map_value_t = std::map<ptr_value_t, set_key_t, LessPQ<ptr_value_t>>;
 
@@ -194,6 +212,12 @@ private:
    map_value_t map_value;
    size_type counter = 0;
 };
+
+
+/*============================================================================*/
+/*                             Implementacja.                                 */
+/*============================================================================*/
+
 
 template<typename K, typename V>
 PriorityQueue<K, V>::PriorityQueue(const PriorityQueue<K, V>& queue) {
@@ -235,13 +259,13 @@ void PriorityQueue<K, V>::insert(const K& key, const V& value) {
 
    map_key[tmp_k].insert(tmp_v);
    map_value[tmp_v].insert(tmp_k);
-/*
+///*
 //TEST
 #include <iostream>
 std::cout << "key: " << map_key.size() << " " << map_key.begin()->second.size() << std::endl;
 std::cout << "value: " <<map_value.size() << " " << map_value.begin()->second.size() << std::endl;
 std::cout << "-------------------------------------------------------\n";
-*/
+//*/
    ++counter;
 }
 
@@ -367,25 +391,29 @@ bool operator!=(const PriorityQueue<K, V>& lhs,
 template<typename K, typename V>
 bool operator<(const PriorityQueue<K, V>& lhs, 
                const PriorityQueue<K, V>& rhs) {
-   return true;
-}
 
-template<typename K, typename V>
-bool operator<=(const PriorityQueue<K, V>& lhs, 
-                const PriorityQueue<K, V>& rhs) {
-   return true;
+//#include <iostream>
+// TODO tak nie działa bo < nie używa LessPQ tylko porownuje wskazniki...
+
+   return lhs.map_key < rhs.map_key;
 }
 
 template<typename K, typename V>
 bool operator>(const PriorityQueue<K, V>& lhs, 
                const PriorityQueue<K, V>& rhs) {
-   return true;
+   return rhs < lhs;
+}
+
+template<typename K, typename V>
+bool operator<=(const PriorityQueue<K, V>& lhs, 
+                const PriorityQueue<K, V>& rhs) {
+   return !(rhs < lhs);
 }
 
 template<typename K, typename V>
 bool operator>=(const PriorityQueue<K, V>& lhs, 
                 const PriorityQueue<K, V>& rhs) {
-   return true;
+   return !(lhs < rhs);
 }
 
 #endif /* __PRIORITYQUEUE_HH__ */

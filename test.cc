@@ -15,9 +15,9 @@ int main() {
 
     PriorityQueue<int, int> TT = f(PriorityQueue<int, int>());
     TT.insert(1, 1);
-    TT.insert(1, 2);
-    TT.insert(1, 3);
-    TT.insert(1, 4);
+    TT.insert(1, 1);
+    TT.insert(1, 1);
+    TT.insert(1, 1);
 }
     PriorityQueue<int, int> P = f(PriorityQueue<int, int>());
     assert(P.empty());
@@ -135,7 +135,20 @@ int main() {
     assert(T != S);
     assert(T == R);
 
-    std::cout << "ALL OK!" << std::endl;
+{
+    PriorityQueue<int, int> PP;
+    PriorityQueue<int, int> QQ;
+    PriorityQueue<int, int> SS;
+    PP.insert(1, 42);
+    PP.insert(2, 13);
+    QQ.insert(1, 41);
+    QQ.insert(3, 12);
+    SS.insert(1, 42);
+    assert(QQ < SS);
+    assert(SS < PP);
+    assert(QQ < PP);
+}
 
+    std::cout << "ALL OK!" << std::endl;
     return 0;
 }
