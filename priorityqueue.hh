@@ -4,15 +4,22 @@
 #include <memory>
 #include <map>
 #include <set>
+#include <cassert> //
 
 // TODO noexcept zamiast throw() ?
 class PriorityQueueEmptyException: public std::exception {
+
+public:
+
    virtual const char* what() const throw() {
       return "PriorityQueueEmptyException";
    }
 };
 
 class PriorityQueueNotFoundException: public std::exception {
+
+public:
+
    virtual const char* what() const throw() {
       return "PriorityQueueNotFoundException";
    }
@@ -175,8 +182,6 @@ typename PriorityQueue<K, V>::size_type PriorityQueue<K, V>::size() const {
    return counter;
 }
 
-
-
 template<typename K, typename V>
 void PriorityQueue<K, V>::insert(const K& key, const V& value) {
    ptr_key_t tmp_k = std::make_shared<K>(key);
@@ -185,9 +190,11 @@ void PriorityQueue<K, V>::insert(const K& key, const V& value) {
    map_key[tmp_k].insert(tmp_v);
    map_value[tmp_v].insert(tmp_k);
 /*
+//TEST
 #include <iostream>
-std::cout << map_key.size() << std::endl;
-std::cout << map_value.size() << std::endl;
+std::cout << "key: " << map_key.size() << " " << map_key.begin()->second.size() << std::endl;
+std::cout << "value: " <<map_value.size() << " " << map_value.begin()->second.size() << std::endl;
+std::cout << "-------------------------------------------------------\n";
 */
    ++counter;
 }
@@ -229,13 +236,13 @@ void PriorityQueue<K, V>::deleteMin() {
    auto it_k = map_value.cbegin()->second.cbegin();
    ptr_key_t tmp_k = *it_k;
    ptr_value_t tmp_v = map_value.cbegin()->first;
-   map_value.begin()->second.erase(it_k);
-   if (map_value.begin()->second.empty())
-      map_value.erase(map_value.cbegin());
+   map_value.begin()->second.erase(it_k); // O(1)
+   if (map_value.begin()->second.empty()) 
+      map_value.erase(map_value.cbegin()); // O(1)
    // TODO kilka razy logarytmiczen operacje, moze da sie raz na iteratorze
-   map_key[tmp_k].erase(tmp_v);
-   if (map_key[tmp_k].empty())
-      map_key.erase(tmp_k);
+   map_key[tmp_k].erase(tmp_v); // log + log
+   if (map_key[tmp_k].empty())   // log + log
+      map_key.erase(tmp_k); // log
    --counter;
 }
 
@@ -258,14 +265,27 @@ void PriorityQueue<K, V>::deleteMax() {
 }
 
 template<typename K, typename V>
-void PriorityQueue<K, V>::changeValue(const K& key, const V& value) {
-   
-
+void PriorityQueue<K, V>::changeValue(const K& key, const V& value) { 
+   ptr_key_t tmp_k = std::make_shared<K>(key);
+   // Znajdowanie klucza.
+   auto it_k = map_key.find(tmp_k); // log(size)
+   if (it_k == map_key.end())
+      throw PriorityQueueNotFoundException();
+   // Usunięcie starej i wstawienie nowej wartości do setu.
+   set_value_t set_v = it_k->second;
+   ptr_value_t tmp_v = *set_v.begin();
+   set_v.erase(set_v.begin());
+   ptr_value_t new_v = std::make_shared<V>(value);
+   set_v.insert(new_v);
+   // Usunięcie klucza spod starej wartości w secie kluczy 
+   // i dodanie go do setu nowej wartości.
+   map_value.find(tmp_v)->second.erase(tmp_k);
+   map_value[new_v].insert(tmp_k);
 }
 
 template<typename K, typename V>
 void PriorityQueue<K, V>::merge(PriorityQueue<K, V>& queue) {
-
+   
 }
 
 template<typename K, typename V>

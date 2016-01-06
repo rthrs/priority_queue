@@ -10,6 +10,15 @@ PriorityQueue<int, int> f(PriorityQueue<int, int> q)
 }
 
 int main() {
+
+{
+
+    PriorityQueue<int, int> TT = f(PriorityQueue<int, int>());
+    TT.insert(1, 1);
+    TT.insert(1, 2);
+    TT.insert(1, 3);
+    TT.insert(1, 4);
+}
     PriorityQueue<int, int> P = f(PriorityQueue<int, int>());
     assert(P.empty());
 
@@ -57,7 +66,7 @@ int main() {
 
     PriorityQueue<int, int> S;
     S = R;
-/*
+
     try
     {
         S.changeValue(4, 400);
@@ -77,7 +86,7 @@ int main() {
     {
         while (true)
         {
-            std::cout << S.minValue() << std::endl;
+            std::cout << S.minKey()<< " " << S.minValue() << std::endl;
             S.deleteMin();
         }
         assert(!"S.minValue() on empty S did not throw!");
@@ -109,7 +118,7 @@ int main() {
     T.insert(1, 1);
     T.insert(2, 4);
     S.insert(3, 9);
-    S.insert(4, 16);
+    S.insert(4, 16); /*
     S.merge(T);
     assert(S.size() == 4);
     assert(S.minValue() == 1);
