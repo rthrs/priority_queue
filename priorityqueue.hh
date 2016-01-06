@@ -10,6 +10,7 @@
 #include <memory>
 #include <map>
 #include <set>
+#include <algorithm>
 #include <cassert> //
 
 
@@ -195,7 +196,7 @@ public:
 private:
 
    template<typename T>
-   struct LessPQ {
+   struct LessPtr {
       bool operator() (const T& lhs, const T& rhs) const {
          return *lhs < *rhs;
       }
@@ -203,10 +204,21 @@ private:
    
    using ptr_key_t = std::shared_ptr<K>;
    using ptr_value_t = std::shared_ptr<V>;
-   using set_key_t = std::multiset<ptr_key_t, LessPQ<ptr_key_t>>;
-   using set_value_t = std::multiset<ptr_value_t, LessPQ<ptr_value_t>>;
-   using map_key_t = std::map<ptr_key_t, set_value_t, LessPQ<ptr_key_t>>;
-   using map_value_t = std::map<ptr_value_t, set_key_t, LessPQ<ptr_value_t>>;
+   using set_key_t = std::multiset<ptr_key_t, LessPtr<ptr_key_t>>;
+   using set_value_t = std::multiset<ptr_value_t, LessPtr<ptr_value_t>>;
+   using map_key_t = std::map<ptr_key_t, set_value_t, LessPtr<ptr_key_t>>;
+   using map_value_t = std::map<ptr_value_t, set_key_t, LessPtr<ptr_value_t>>;
+
+   static bool lessMaps(const std::pair<ptr_key_t, set_value_t>& lhs, 
+                 const std::pair<ptr_key_t, set_value_t>& rhs) {
+      if (*lhs.first == *rhs.first) 
+         return std::lexicographical_compare(
+            lhs.second.begin(), lhs.second.end(),
+            rhs.second.begin(), lhs.second.end(),
+            [](const ptr_value_t& x, const ptr_value_t& y) -> bool
+            {return *x < *y;});
+      return *lhs.first < *rhs.first;
+   }
 
    map_key_t map_key;
    map_value_t map_value;
@@ -259,13 +271,13 @@ void PriorityQueue<K, V>::insert(const K& key, const V& value) {
 
    map_key[tmp_k].insert(tmp_v);
    map_value[tmp_v].insert(tmp_k);
-///*
+/*
 //TEST
 #include <iostream>
 std::cout << "key: " << map_key.size() << " " << map_key.begin()->second.size() << std::endl;
 std::cout << "value: " <<map_value.size() << " " << map_value.begin()->second.size() << std::endl;
 std::cout << "-------------------------------------------------------\n";
-//*/
+*/
    ++counter;
 }
 
@@ -377,6 +389,8 @@ bool operator==(const PriorityQueue<K, V>& lhs,
                 const PriorityQueue<K, V>& rhs) {
    if (lhs.size() != rhs.size())
       return false;
+   // TODO chyba nie powinno działać z tego samego powdu jak było dla <
+   // TODO o ile to ma byc 'leksykograficznie' tzn w sensie zawartości.
    return (lhs.map_key == rhs.map_key) && (lhs.map_value == rhs.map_value);
 }
 
@@ -386,16 +400,14 @@ bool operator!=(const PriorityQueue<K, V>& lhs,
    return !(lhs == rhs);
 }
 
-// TODO zaślepki
-
 template<typename K, typename V>
 bool operator<(const PriorityQueue<K, V>& lhs, 
                const PriorityQueue<K, V>& rhs) {
 
-//#include <iostream>
-// TODO tak nie działa bo < nie używa LessPQ tylko porownuje wskazniki...
-
-   return lhs.map_key < rhs.map_key;
+   return std::lexicographical_compare(
+      lhs.map_key.begin(), lhs.map_key.end(),
+      rhs.map_key.begin(), rhs.map_key.end(), 
+      PriorityQueue<K, V>::lessMaps);
 }
 
 template<typename K, typename V>
