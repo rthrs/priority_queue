@@ -56,6 +56,9 @@ template<typename K, typename V>
 bool operator<(const PriorityQueue<K, V>& lhs, 
                const PriorityQueue<K, V>& rhs);
 
+//template<typename K, typename V>
+//void swap(PriorityQueue<K, V>& queue1, PriorityQueue<K, V>& queue2);
+
 template<typename K, typename V>
 class PriorityQueue {
 
@@ -130,7 +133,8 @@ public:
 
    /**
     * Metody usuwające z kolejki jedną parę o odpowiednio najmniejszej lub
-    * największej wartości [O(log size())]
+    * największej wartości. 
+    * [O(log size())]
     */
    void deleteMin();
    
@@ -155,9 +159,21 @@ public:
 
    /**
     * Metoda zamieniającą zawartość kolejki z podaną kolejką queue (tak jak
-    * większość kontenerów w bibliotece standardowej) [O(1)]
+    * większość kontenerów w bibliotece standardowej). 
+    * [O(1)]
     */
    void swap(PriorityQueue<K, V>& queue);
+
+   /** 
+    * Globalna metoda swap. [O(1)]
+    */
+   // TODO na razie tu
+   friend void swap(PriorityQueue<K, V>& queue1, PriorityQueue<K, V>& queue2) {
+      using std::swap;
+      std::swap(queue1.map_key, queue2.map_key);
+      std::swap(queue1.map_value, queue2.map_value);
+      std::swap(queue1.counter, queue2.counter);
+   }
 
    friend bool operator== <>(const PriorityQueue<K, V>& lhs, 
                              const PriorityQueue<K, V>& rhs);
@@ -374,8 +390,8 @@ void PriorityQueue<K, V>::merge(PriorityQueue<K, V>& queue) {
 
 template<typename K, typename V>
 void PriorityQueue<K, V>::swap(PriorityQueue<K, V>& queue) {
-   map_key.swap(queue.map_key);
-   map_value.swap(queue.map_value);
+   std::swap(map_key, queue.map_key);
+   std::swap(map_value, queue.map_value);
    std::swap(counter, queue.counter);
 }
 

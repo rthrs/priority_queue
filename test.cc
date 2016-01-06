@@ -129,8 +129,7 @@ int main() {
     assert(T.empty());
 
     S = R;
-    // swap(R, T); //tak było wtf ?
-    R.swap(T);
+    swap(R, T);
 
     assert(T == S);
     assert(T != R);
