@@ -14,7 +14,10 @@ int main() {
 {
 
     PriorityQueue<int, int> TT = f(PriorityQueue<int, int>());
+    PriorityQueue<int, int> AA = f(PriorityQueue<int, int>());
     TT.insert(1, 1);
+    AA.insert(1, 1);
+    assert(AA == TT);
     TT.insert(1, 1);
     TT.insert(1, 1);
     TT.insert(1, 1);
@@ -126,7 +129,8 @@ int main() {
     assert(T.empty());
 
     S = R;
-    std::swap(R, T);
+    // swap(R, T); //tak było wtf ?
+    R.swap(T);
 
     assert(T == S);
     assert(T != R);
@@ -147,6 +151,17 @@ int main() {
     assert(QQ < SS);
     assert(SS < PP);
     assert(QQ < PP);
+    assert(QQ <= SS);
+    assert(SS <= PP);
+    assert(QQ <= PP);
+    assert(SS > QQ);
+    assert(PP > SS);
+    assert(PP > QQ);
+    assert(SS >= QQ);
+    assert(PP >= SS);
+    assert(PP >= QQ);
+
+
 }
 
     std::cout << "ALL OK!" << std::endl;

@@ -24,7 +24,7 @@ class PriorityQueueEmptyException: public std::exception {
 
 public:
 
-   virtual const char* what() const throw() {
+   virtual const char* what() const noexcept {
       return "PriorityQueueEmptyException";
    }
 };
@@ -33,7 +33,7 @@ class PriorityQueueNotFoundException: public std::exception {
 
 public:
 
-   virtual const char* what() const throw() {
+   virtual const char* what() const noexcept {
       return "PriorityQueueNotFoundException";
    }
 };
@@ -51,27 +51,11 @@ class PriorityQueue;
 template<typename K, typename V>
 bool operator==(const PriorityQueue<K, V>& lhs, 
                 const PriorityQueue<K, V>& rhs);
-/*
-template<typename K, typename V>
-bool operator!=(const PriorityQueue<K, V>& lhs, 
-                const PriorityQueue<K, V>& rhs);
-*/
+
 template<typename K, typename V>
 bool operator<(const PriorityQueue<K, V>& lhs, 
                const PriorityQueue<K, V>& rhs);
-/*
-template<typename K, typename V>
-bool operator<=(const PriorityQueue<K, V>& lhs, 
-                const PriorityQueue<K, V>& rhs);
 
-template<typename K, typename V>
-bool operator>(const PriorityQueue<K, V>& lhs, 
-               const PriorityQueue<K, V>& rhs);
-
-template<typename K, typename V>
-bool operator>=(const PriorityQueue<K, V>& lhs, 
-                const PriorityQueue<K, V>& rhs);
-*/
 template<typename K, typename V>
 class PriorityQueue {
 
@@ -177,22 +161,9 @@ public:
 
    friend bool operator== <>(const PriorityQueue<K, V>& lhs, 
                              const PriorityQueue<K, V>& rhs);
-/*
-   friend bool operator!= <>(const PriorityQueue<K, V>& lhs, 
-                             const PriorityQueue<K, V>& rhs);
-*/   
+
    friend bool operator< <>(const PriorityQueue<K, V>& lhs, 
                             const PriorityQueue<K, V>& rhs);
-/*
-   friend bool operator<= <>(const PriorityQueue<K, V>& lhs, 
-                             const PriorityQueue<K, V>& rhs);
-
-   friend bool operator> <>(const PriorityQueue<K, V>& lhs, 
-                            const PriorityQueue<K, V>& rhs);
-
-   friend bool operator>= <>(const PriorityQueue<K, V>& lhs, 
-                             const PriorityQueue<K, V>& rhs);
-*/
 private:
 
    template<typename T>
@@ -210,7 +181,7 @@ private:
    using map_value_t = std::map<ptr_value_t, set_key_t, LessPtr<ptr_value_t>>;
 
    static bool lessMaps(const std::pair<ptr_key_t, set_value_t>& lhs, 
-                 const std::pair<ptr_key_t, set_value_t>& rhs) {
+                        const std::pair<ptr_key_t, set_value_t>& rhs) {
       if (*lhs.first == *rhs.first) 
          return std::lexicographical_compare(
             lhs.second.begin(), lhs.second.end(),
@@ -218,6 +189,28 @@ private:
             [](const ptr_value_t& x, const ptr_value_t& y) -> bool
             {return *x < *y;});
       return *lhs.first < *rhs.first;
+   } 
+/*
+   template<typename T1, typename T2>
+   static bool equalMaps(const std::pair<T1, std::multiset<T2, LessPtr<T2>>>& lhs,
+                         const std::pair<T1, std::multiset<T2, LessPtr<T2>>>& rhs) {
+      if (*lhs.first != *rhs.first) 
+         return false;
+      return std::lexicographical_compare(
+         lhs.second.begin(), lhs.second.end(),
+         rhs.second.begin(), lhs.second.end(),
+         [](const T2& x, const T2& y) -> bool
+         {return *x == *y;});
+   }
+*/
+   static bool equalMaps(const std::pair<ptr_key_t, set_value_t>& lhs, 
+                         const std::pair<ptr_key_t, set_value_t>& rhs) {
+      if (*lhs.first != *rhs.first) 
+         return false;
+      return std::equal(
+         lhs.second.begin(), lhs.second.end(), rhs.second.begin(),
+         [](const ptr_value_t& x, const ptr_value_t& y) -> bool
+         {return *x == *y;});
    }
 
    map_key_t map_key;
@@ -248,6 +241,7 @@ PriorityQueue<K, V>::PriorityQueue(PriorityQueue<K, V>&& queue) {
    counter = queue.counter; 
 }
 
+// Unifying assigment operator ma silną gwarancję.
 template<typename K, typename V>
 PriorityQueue<K, V>& PriorityQueue<K, V>::operator=(PriorityQueue<K, V> queue) {
    queue.swap(*this);
@@ -295,8 +289,6 @@ const V& PriorityQueue<K, V>::maxValue() const {
    return *map_value.crbegin()->first;
 }
 
-// TODO chyba jesli jest kilka takich kluczy to moze byc dowolny right?
-// TODO teraz zawsze zwracany klucz o najmniejszej wartosci, change that?
 template<typename K, typename V> // V?
 const K& PriorityQueue<K, V>::minKey() const {
    if (empty())
@@ -367,6 +359,9 @@ void PriorityQueue<K, V>::changeValue(const K& key, const V& value) {
 
 template<typename K, typename V>
 void PriorityQueue<K, V>::merge(PriorityQueue<K, V>& queue) {
+   // Jeśli merge do samego siebie.
+   if (this == &queue)
+      return;
    // Merge *this z queue.
    map_key.insert(queue.map_key.begin(), queue.map_key.end()); 
    map_value.insert(queue.map_value.begin(), queue.map_value.end()); 
@@ -389,9 +384,12 @@ bool operator==(const PriorityQueue<K, V>& lhs,
                 const PriorityQueue<K, V>& rhs) {
    if (lhs.size() != rhs.size())
       return false;
-   // TODO chyba nie powinno działać z tego samego powdu jak było dla <
-   // TODO o ile to ma byc 'leksykograficznie' tzn w sensie zawartości.
-   return (lhs.map_key == rhs.map_key) && (lhs.map_value == rhs.map_value);
+   // TODO czy porównanie tylko na mapach kluczy wystarczy ?
+   return std::equal(
+      lhs.map_key.begin(), 
+      lhs.map_key.end(), 
+      rhs.map_key.begin(),
+      PriorityQueue<K, V>::equalMaps);
 }
 
 template<typename K, typename V>
@@ -429,4 +427,3 @@ bool operator>=(const PriorityQueue<K, V>& lhs,
 }
 
 #endif /* __PRIORITYQUEUE_HH__ */
-
