@@ -118,7 +118,7 @@ int main() {
     T.insert(1, 1);
     T.insert(2, 4);
     S.insert(3, 9);
-    S.insert(4, 16); /*
+    S.insert(4, 16); 
     S.merge(T);
     assert(S.size() == 4);
     assert(S.minValue() == 1);
@@ -126,7 +126,8 @@ int main() {
     assert(T.empty());
 
     S = R;
-    swap(R, T);
+    std::swap(R, T);
+/*
     assert(T == S);
     assert(T != R);
 

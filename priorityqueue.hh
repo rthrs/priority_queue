@@ -285,7 +285,14 @@ void PriorityQueue<K, V>::changeValue(const K& key, const V& value) {
 
 template<typename K, typename V>
 void PriorityQueue<K, V>::merge(PriorityQueue<K, V>& queue) {
-   
+   // Marge *this z queue.
+   map_key.insert(queue.map_key.begin(), queue.map_key.end()); 
+   map_value.insert(queue.map_value.begin(), queue.map_value.end()); 
+   counter += queue.counter;
+   // Czyszczenie queue.
+   queue.map_key.clear();
+   queue.map_value.clear();
+   queue.counter = 0;
 }
 
 template<typename K, typename V>
