@@ -158,58 +158,6 @@ public:
    
    bool operator>=(const PriorityQueue<K, V>& queue) const;
    
-   void print() const {
-      std::cout << "Queue's size = " << size() << std::endl;
-      std::cout << "map_key:\n";
-      auto it = map_key.begin();
-      while (it != map_key.end()) {
-         K key = *it->first;
-         std::cout << "the key is: " << key << std::endl;
-         auto set_it = it->second.begin();
-         while (set_it != it->second.end()) {
-            std::cout << key << " -> " << **set_it << std::endl;
-            ++set_it;
-         }
-         ++it;
-      }
-      std::cout << "map_key printed from back:\n";
-      auto it_r = map_key.crbegin();
-      while (it_r != map_key.crend()) {
-         K key = *it_r->first;
-         std::cout << "the key is: " << key << std::endl;
-         auto set_it = it_r->second.crbegin();
-         while (set_it != it_r->second.crend()) {
-            std::cout << key << " -> " << **set_it << std::endl;
-            ++set_it;
-         }
-         ++it_r;
-      }
-      std::cout << "values_map:\n";
-      it = map_value.begin();
-      while (it != map_value.end()) {
-         V key = *it->first;
-         std::cout << "the key is: " << key << std::endl;
-         auto set_it = it->second.begin();
-         while (set_it != it->second.end()) {
-            std::cout << key << " -> " << **set_it << std::endl;
-            ++set_it;
-         }
-         ++it;
-      }
-      std::cout << "values_map from back:\n";
-      it_r = map_value.crbegin();
-      while (it_r != map_value.crend()) {
-         std::cout << "the key is: " << *it_r->first << std::endl;
-         V key = *it_r->first;
-         auto set_it = it_r->second.crbegin();
-         while (set_it != it_r->second.crend()) {
-            std::cout << key << " -> " << **set_it << std::endl;
-            ++set_it;
-         }
-         ++it_r;
-      }
-   }
-
 private:
 
    // Komparator porównujący zdereferowane wskaźniki.
@@ -287,11 +235,10 @@ void PriorityQueue<K, V>::insert(const K& key, const V& value) {
    try {
       map_value[tmp_v].insert(tmp_k);
    } catch (...) {
-      if (first) {    
+      if (first) 
          map_key.erase(it); // O(1)
-      } else {
+      else 
          it->second.erase(set_it); // O(1)
-      }
       throw;
    }
    ++counter;
