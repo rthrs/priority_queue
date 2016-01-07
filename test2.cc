@@ -232,7 +232,13 @@ struct CompareThrower {
             throw WeirdException("move fail");
         return true;
     }
-};
+/*
+ friend std::ostream& operator<< (std::ostream & out, const CompareThrower& data) {
+    out << "CompareThrower";
+    return out ;
+   }
+*/
+  };
 
 
 
@@ -302,7 +308,7 @@ void testCopy()  {
         assert(false && "no weird exception");
     }
     assert(P.size() == 1);
-    P.deleteMin();
+   // P.deleteMin();
 
     // no throws
     PriorityQueue<int, CopyThrower> P3 = P;

@@ -270,7 +270,13 @@ bool run_test() {
 
   expected = VP{{4,-15}, {2,0}, {2,13}, {4,24}, {0,33}, {1,33}, {0,40}, {1,40},
                            {1,45}, {4,45}, {2,48}, {4,48}, {2,49}};
-
+/*
+C.print();
+std::cout << "-------------------------------------------------------\n";
+P.print();
+*/
+std::cout << C.size() << std::endl;
+std::cout << P.size() << std::endl;
   DO_OP(assert(C == P), C, expected);
   DO_OP(assert(D.empty()), D, VP());
 

@@ -16,7 +16,11 @@ int main() {
     PriorityQueue<int, int> TT = f(PriorityQueue<int, int>());
     PriorityQueue<int, int> AA = f(PriorityQueue<int, int>());
     TT.insert(1, 1);
+    TT.insert(2, 2);
+    TT.insert(3, 3);
     AA.insert(1, 1);
+    AA.insert(2, 2);
+    AA.insert(3, 3);
     assert(AA == TT);
     TT.insert(1, 1);
     TT.insert(1, 1); 
