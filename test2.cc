@@ -207,7 +207,7 @@ struct CopyThrower {
     }
     CopyThrower(CopyThrower &&) noexcept {}
 
-    bool operator<(const CopyThrower&) const { return true; }
+    bool operator<(const CopyThrower&) const { return false; }
     bool operator==(const CopyThrower&) const { return true; }
 
     bool p;
@@ -308,7 +308,7 @@ void testCopy()  {
         assert(false && "no weird exception");
     }
     assert(P.size() == 1);
-   // P.deleteMin();
+    P.deleteMin();
 
     // no throws
     PriorityQueue<int, CopyThrower> P3 = P;
