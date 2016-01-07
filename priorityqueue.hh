@@ -320,8 +320,8 @@ void PriorityQueue<K, V>::insert(const K& key, const V& value) {
    // TODO: (@artur) ogarnij, czy tak jest dobrze -
    // mi sie po wielu bolach wydaje, ze jest
    try {
-      tmp_k = std::make_shared<K>(key);
-      tmp_v = std::make_shared<V>(value);
+      //tmp_k = std::make_shared<K>(key);
+      //tmp_v = std::make_shared<V>(value);
       map_value[tmp_v].insert(tmp_k);
    } catch (...) {
       if (first) {    
@@ -446,6 +446,7 @@ void PriorityQueue<K, V>::changeValue(const K& key, const V& value) {
    // Usunięcie elementów przy zakończonym sukcesem insercie,
    // ponieważ begin() oraz erase() dla iteratorów są
    // no-throw, tu wyjątek nie może się pojawić.
+
    it_k->second.erase(it_k->second.begin());
    if (single) {
       map_value.erase(map_value_it);

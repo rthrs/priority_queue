@@ -40,10 +40,16 @@ int testInt() {
     assert(P.minKey() == 2);
     assert(P.minValue() == 13);
     
+cout<<"11111!!!!!!!!!!\n";
     P.print();
   
+cout<<"!!!!!!!!!!\n";
     P.changeValue(1, 43);
-    P.print(); 
+
+cout<<"22222!!!!!!!!!!\n";
+ 
+   P.print(); 
+cout<<"!!!!!!!!!!\n";
     assert(P.size() == 2);
     assert(P.maxKey() == 1);
     assert(P.maxValue() == 43);
@@ -52,7 +58,11 @@ int testInt() {
 
     // back to previous
     P.changeValue(1, 42);
+
+cout<<"33333!!!!!!!!!!\n";
     P.print();
+
+cout<<"!!!!!!!!!!\n";
     std::cout << "b\n";
     assert(P.size() == 2);
     std::cout << "d\n";
@@ -67,6 +77,12 @@ int testInt() {
     std::cout << "a\n";
     
     PriorityQueue<int, int> Q(f(P));
+
+cout<<"4444!!!!!!!!!!\n";
+
+Q.print();
+
+cout<<"!!!!!!!!!!\n";
 
     Q.deleteMax();
     Q.deleteMin();
@@ -268,7 +284,7 @@ void testCompare() {
 
     THROW_NOW_THIS_IS_MADNESS = false;
 }
-/* 
+ 
 
 void testCopy()  {
     THROW_NOW_THIS_IS_MADNESS = false;
@@ -494,15 +510,15 @@ void testOutOfMemory1() {
             break;
         }
     }
-}*/
+}
 
 int main() {
     testInt();
-    //testCopy();
+    testCopy();
     testCompare();
-    /*testRandom();
+    testRandom();
     testWeirdThings();
-    testOutOfMemory1();*/
+    testOutOfMemory1();
 
     //testMove(); test nie ma chyba sensu skoro nie przenosimy wartosci do Årodka, a przenoszenie
     // caÅej kolejki nie przenosi poszczegÃ³lnych elementÃ³w
