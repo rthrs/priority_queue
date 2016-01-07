@@ -304,10 +304,32 @@ template<typename K, typename V>
 void PriorityQueue<K, V>::insert(const K& key, const V& value) {
    ptr_key_t tmp_k = std::make_shared<K>(key);
    ptr_value_t tmp_v = std::make_shared<V>(value);
-   map_key[tmp_k].insert(tmp_v);
-   tmp_k = std::make_shared<K>(key);
-   tmp_v = std::make_shared<V>(value);
-   map_value[tmp_v].insert(tmp_k);
+   auto it = map_key.find(tmp_k);
+   typename set_value_t::const_iterator set_it;
+   bool first = false;
+   if (it == map_key.end()) {
+      first = true;
+      set_value_t s;
+      s.insert(tmp_v);
+      auto it_tmp = map_key.insert(std::make_pair(tmp_k,s));
+      it = it_tmp.first;
+   } else {
+      set_it = map_key[tmp_k].insert(tmp_v);
+   }
+   // TODO: (@artur) ogarnij, czy tak jest dobrze -
+   // mi sie po wielu bolach wydaje, ze jest
+   try {
+      tmp_k = std::make_shared<K>(key);
+      tmp_v = std::make_shared<V>(value);
+      map_value[tmp_v].insert(tmp_k);
+   } catch (...) {
+      if (first) {    
+         map_key.erase(it);
+      } else {
+         it->second.erase(set_it);
+      }
+      throw;
+   }
 /*
 //TEST
 #include <iostream>
@@ -438,7 +460,7 @@ bool PriorityQueue<K, V>::operator==(const PriorityQueue<K, V>& queue) const {
    auto lhs_it = map_key.begin();
    auto rhs_it = queue.map_key.begin();
    while (lhs_it != map_key.end()) {
-      if (*(lhs_it->first) != *(rhs_it->first)) {
+      if (!(*(lhs_it->first) == *(rhs_it->first))) {
          return false;
       } else {
          if (lhs_it->second.size() != rhs_it->second.size()) {
@@ -447,7 +469,7 @@ bool PriorityQueue<K, V>::operator==(const PriorityQueue<K, V>& queue) const {
             auto lhs_set_it = lhs_it->second.begin();
             auto rhs_set_it = rhs_it->second.begin();
             while (lhs_set_it != lhs_it->second.end()) {
-               if (**lhs_set_it != **rhs_set_it) {
+               if (!(**lhs_set_it == **rhs_set_it)) {
                   return false;
                } else {
                   ++lhs_set_it;
