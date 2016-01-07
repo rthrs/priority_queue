@@ -460,32 +460,24 @@ void PriorityQueue<K, V>::changeValue(const K& key, const V& value) {
       map_value_it->second.erase(set_it);
    }
 }
-/*
-template<typename K, typename V>
-void PriorityQueue<K, V>::merge(PriorityQueue<K, V>& queue) {
-   // Jeśli merge do samego siebie.
-   if (this == &queue)
-      return;
-   // Merge *this z queue.
-   map_key.insert(queue.map_key.begin(), queue.map_key.end()); 
-   map_value.insert(queue.map_value.begin(), queue.map_value.end()); 
-   counter += queue.counter;
-   // Czyszczenie queue.
-   queue.map_key.clear();
-   queue.map_value.clear();
-   queue.counter = 0;
-}
-*/
 
 template<typename K, typename V>
 void PriorityQueue<K, V>::merge(PriorityQueue<K, V>& queue) {
    // Jeśli merge do samego siebie.
    if (this == &queue)
       return;
+
    // Merge *this z queue.
    PriorityQueue<K, V> tmp(*this);
-   tmp.map_key.insert(queue.map_key.begin(), queue.map_key.end()); 
-   tmp.map_value.insert(queue.map_value.begin(), queue.map_value.end()); 
+
+   for (auto it = queue.map_key.begin(); it != queue.map_key.end(); ++it)
+      tmp.map_key[it->first].insert(it->second.begin(), it->second.end());
+
+   for (auto it = queue.map_value.begin(); it != queue.map_value.end(); ++it)
+      tmp.map_value[it->first].insert(it->second.begin(), it->second.end());
+
+   //tmp.map_key.insert(queue.map_key.begin(), queue.map_key.end()); 
+   //tmp.map_value.insert(queue.map_value.begin(), queue.map_value.end()); 
    tmp.counter += queue.counter;
    tmp.swap(*this);
    // Czyszczenie queue. clear() jest no-throw.
@@ -494,14 +486,12 @@ void PriorityQueue<K, V>::merge(PriorityQueue<K, V>& queue) {
    queue.counter = 0;
 }
 
-
 template<typename K, typename V>
 void PriorityQueue<K, V>::swap(PriorityQueue<K, V>& queue) {
    std::swap(map_key, queue.map_key);
    std::swap(map_value, queue.map_value);
    std::swap(counter, queue.counter);
 }
-
 
 template<typename K, typename V>
 bool PriorityQueue<K, V>::operator==(const PriorityQueue<K, V>& queue) const {

@@ -15,12 +15,25 @@ int main() {
 
     PriorityQueue<int, int> TT = f(PriorityQueue<int, int>());
     PriorityQueue<int, int> AA = f(PriorityQueue<int, int>());
+    PriorityQueue<int, int> BB = f(PriorityQueue<int, int>());
+
+
     TT.insert(1, 1);
-    TT.insert(2, 2);
-    TT.insert(3, 3);
+    TT.insert(1, 2);
     AA.insert(1, 1);
-    AA.insert(2, 2);
-    AA.insert(3, 3);
+    BB.insert(1, 2);
+std::cout << "TT---------------------\n";
+TT.print();
+std::cout << "AA---------------------\n";
+AA.print();
+std::cout << "BB---------------------\n";
+BB.print();
+
+
+   AA.merge(BB);
+std::cout << "AA merge BB ---------------------\n";
+AA.print();
+
     assert(AA == TT);
     TT.insert(1, 1);
     TT.insert(1, 1); 
