@@ -236,6 +236,7 @@ void testCompare() {
     try {
         THROW_NOW_THIS_IS_MADNESS = true;
         CompareThrower t;
+
         P.insert(42, t);
     }
     catch (WeirdException &) {
@@ -244,10 +245,25 @@ void testCompare() {
         assert(false && "no weird exception");
     }
     assert(P.size() == 5);
-    P.deleteMin();
-    assert(P.size() == 4);
-    P.deleteMax();
-    assert(P.size() == 3);
+    try {
+        P.deleteMin();
+    } catch (WeirdException &) {
+    }
+    catch (...) {
+        assert(false && "no weird exception");
+    }
+    assert(P.size() == 5);
+
+    try {
+        P.deleteMax();
+    } catch (WeirdException &) {
+    }
+    catch (...) {
+        assert(false && "no weird exception");
+    }
+
+   
+    assert(P.size() == 5);
 
 
     THROW_NOW_THIS_IS_MADNESS = false;

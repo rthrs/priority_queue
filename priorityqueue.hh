@@ -12,6 +12,7 @@
 #include <set>
 #include <algorithm>
 #include <cassert> //
+#include <iostream> //
 
 
 /*============================================================================*/
@@ -372,16 +373,26 @@ template<typename K, typename V>
 void PriorityQueue<K, V>::deleteMin() {
     if (empty())
       return;
+
    auto it_k = map_value.cbegin()->second.cbegin();
    ptr_key_t tmp_k = *it_k;
    ptr_value_t tmp_v = map_value.cbegin()->first;
+
+   auto it_map_key = map_key.find(tmp_k);
+   assert(it_map_key != map_key.end());
+   auto it_map_key_set = it_map_key->second.find(tmp_v);
+   assert(it_map_key_set != it_map_key->second.end());
+
+   // Usunięcie klucza spod min wartości.
    map_value.begin()->second.erase(it_k); // O(1)
    if (map_value.begin()->second.empty()) 
       map_value.erase(map_value.cbegin()); // O(1)
-   // TODO kilka razy logarytmiczen operacje, moze da sie raz na iteratorze
-   map_key[tmp_k].erase(tmp_v); // log + log
-   if (map_key[tmp_k].empty())   // log + log
-      map_key.erase(tmp_k); // log
+
+   // Usunięcie tej wartości spod klucza.
+   it_map_key->second.erase(it_map_key_set);
+   if (it_map_key->second.empty())
+      map_key.erase(it_map_key);
+ 
    --counter;
 }
 
@@ -389,17 +400,26 @@ template<typename K, typename V>
 void PriorityQueue<K, V>::deleteMax() {
    if (empty())
       return;
-   // TODO copy paste
+
    auto it_k = map_value.crbegin()->second.cbegin();
    ptr_key_t tmp_k = *it_k;
    ptr_value_t tmp_v = map_value.crbegin()->first;
-   map_value.rbegin()->second.erase(it_k);
-   if (map_value.crbegin()->second.empty())
-      map_value.erase(--map_value.crbegin().base());
-   // TODO kilka razy logarytmiczen operacje, moze da sie raz na iteratorze
-   map_key[tmp_k].erase(tmp_v);
-   if (map_key[tmp_k].empty())
-      map_key.erase(tmp_k);
+
+   auto it_map_key = map_key.find(tmp_k);
+   assert(it_map_key != map_key.end());
+   auto it_map_key_set = it_map_key->second.find(tmp_v);
+   assert(it_map_key_set != it_map_key->second.end());
+
+   // Usunięcie klucza spod min wartości.
+   map_value.rbegin()->second.erase(it_k); // O(1)
+   if (map_value.rbegin()->second.empty()) 
+      map_value.erase(--map_value.crbegin().base()); // O(1)
+
+   // Usunięcie tej wartości spod klucza.
+   it_map_key->second.erase(it_map_key_set);
+   if (it_map_key->second.empty())
+      map_key.erase(it_map_key);
+ 
    --counter;
 }
 
