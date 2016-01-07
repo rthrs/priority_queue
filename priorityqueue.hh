@@ -434,6 +434,7 @@ void PriorityQueue<K, V>::changeValue(const K& key, const V& value) {
    // przy pomyślnym insercie nowego elementu.
    ptr_value_t tmp_v = *it_k->second.begin();
    auto map_value_it = map_value.find(tmp_v);
+   auto set_key_it = it_k->second.begin();
    typename set_key_t::const_iterator set_it;
    bool single = (map_value_it->second.size() == 1) ? true : false;
    if (!single) {
@@ -446,7 +447,7 @@ void PriorityQueue<K, V>::changeValue(const K& key, const V& value) {
    // Usunięcie elementów przy zakończonym sukcesem insercie,
    // ponieważ begin() oraz erase() dla iteratorów są
    // no-throw, tu wyjątek nie może się pojawić.
-   it_k->second.erase(it_k->second.begin());
+   it_k->second.erase(set_key_it);
    if (single) {
       map_value.erase(map_value_it);
    } else {
