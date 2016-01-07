@@ -175,6 +175,32 @@ public:
    bool operator>(const PriorityQueue<K, V>& queue) const;
    
    bool operator>=(const PriorityQueue<K, V>& queue) const;
+   
+   void print() const {
+      std::cout << "Queue's size = " << size() << std::endl;
+      std::cout << "map_key:\n";
+      auto it = map_key.begin();
+      while (it != map_key.end()) {
+         K key = *it->first;
+         auto set_it = it->second.begin();
+         while (set_it != it->second.end()) {
+            std::cout << key << " -> " << **set_it << std::endl;
+            ++set_it;
+         }
+         ++it;
+      }
+      std::cout << "values_map:\n";
+      it = map_value.begin();
+      while (it != map_value.end()) {
+         V key = *it->first;
+         auto set_it = it->second.begin();
+         while (set_it != it->second.end()) {
+            std::cout << key << " -> " << **set_it << std::endl;
+            ++set_it;
+         }
+         ++it;
+      }
+   }
 
    /** 
     * Globalna metoda swap. [O(1)]
@@ -256,7 +282,6 @@ bool PriorityQueue<K, V>::empty() const {
 
 template<typename K, typename V>
 typename PriorityQueue<K, V>::size_type PriorityQueue<K, V>::size() const {
-   std::cout << "map_key size = " << map_key.size() << " map_value size = " << map_value.size() << std::endl;
    return counter;
 }
 

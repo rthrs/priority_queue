@@ -41,7 +41,7 @@ int testInt() {
     assert(P.minValue() == 13);
 
 
-
+    P.print();
 
     P.changeValue(1, 43);
     assert(P.size() == 2);
@@ -52,6 +52,7 @@ int testInt() {
 
     // back to previous
     P.changeValue(1, 42);
+    P.print();
     assert(P.size() == 2);
     assert(P.maxKey() == 1);
     assert(P.maxValue() == 42);
@@ -244,7 +245,7 @@ void testCompare() {
 
     THROW_NOW_THIS_IS_MADNESS = false;
 }
-
+/*
 
 void testCopy()  {
     THROW_NOW_THIS_IS_MADNESS = false;
@@ -470,15 +471,15 @@ void testOutOfMemory1() {
             break;
         }
     }
-}
+}*/
 
 int main() {
     testInt();
-    testCopy();
+    /*testCopy();
     testCompare();
     testRandom();
     testWeirdThings();
-    testOutOfMemory1();
+    testOutOfMemory1();*/
 
     //testMove(); test nie ma chyba sensu skoro nie przenosimy wartosci do Årodka, a przenoszenie
     // caÅej kolejki nie przenosi poszczegÃ³lnych elementÃ³w
