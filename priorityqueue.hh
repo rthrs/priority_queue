@@ -410,7 +410,7 @@ void PriorityQueue<K, V>::deleteMax() {
    auto it_map_key_set = it_map_key->second.find(tmp_v);
    assert(it_map_key_set != it_map_key->second.end());
 
-   // Usunięcie klucza spod min wartości.
+   // Usunięcie klucza spod max wartości.
    map_value.rbegin()->second.erase(it_k); // O(1)
    if (map_value.rbegin()->second.empty()) 
       map_value.erase(--map_value.crbegin().base()); // O(1)
