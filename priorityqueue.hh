@@ -212,6 +212,7 @@ public:
 
 private:
 
+   // Komparator porównujący zdereferowane wskaźniki.
    template<typename T>
    struct LessPtr {
       bool operator() (const T& lhs, const T& rhs) const {
