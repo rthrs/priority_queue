@@ -164,6 +164,18 @@ public:
     */
    void swap(PriorityQueue<K, V>& queue);
 
+   bool operator==(const PriorityQueue<K, V>& queue) const;
+   
+   bool operator<(const PriorityQueue<K, V>& queue) const;
+   
+   bool operator!=(const PriorityQueue<K, V>& queue) const;
+   
+   bool operator<=(const PriorityQueue<K, V>& queue) const;
+   
+   bool operator>(const PriorityQueue<K, V>& queue) const;
+   
+   bool operator>=(const PriorityQueue<K, V>& queue) const;
+
    /** 
     * Globalna metoda swap. [O(1)]
     */
@@ -175,11 +187,6 @@ public:
       std::swap(queue1.counter, queue2.counter);
    }
 
-   friend bool operator== <>(const PriorityQueue<K, V>& lhs, 
-                             const PriorityQueue<K, V>& rhs);
-
-   friend bool operator< <>(const PriorityQueue<K, V>& lhs, 
-                            const PriorityQueue<K, V>& rhs);
 private:
 
    template<typename T>
@@ -203,31 +210,9 @@ private:
             lhs.second.begin(), lhs.second.end(),
             rhs.second.begin(), lhs.second.end(),
             [](const ptr_value_t& x, const ptr_value_t& y) -> bool
-            {return *x < *y;});
+            {std::cout << *x << ' ' << *y << std::endl; return *x < *y;});
       return *lhs.first < *rhs.first;
    } 
-/*
-   template<typename T1, typename T2>
-   static bool equalMaps(const std::pair<T1, std::multiset<T2, LessPtr<T2>>>& lhs,
-                         const std::pair<T1, std::multiset<T2, LessPtr<T2>>>& rhs) {
-      if (*lhs.first != *rhs.first) 
-         return false;
-      return std::lexicographical_compare(
-         lhs.second.begin(), lhs.second.end(),
-         rhs.second.begin(), lhs.second.end(),
-         [](const T2& x, const T2& y) -> bool
-         {return *x == *y;});
-   }
-*/
-   static bool equalMaps(const std::pair<ptr_key_t, set_value_t>& lhs, 
-                         const std::pair<ptr_key_t, set_value_t>& rhs) {
-      if (*lhs.first != *rhs.first) 
-         return false;
-      return std::equal(
-         lhs.second.begin(), lhs.second.end(), rhs.second.begin(),
-         [](const ptr_value_t& x, const ptr_value_t& y) -> bool
-         {return *x == *y;});
-   }
 
    map_key_t map_key;
    map_value_t map_value;
@@ -271,6 +256,7 @@ bool PriorityQueue<K, V>::empty() const {
 
 template<typename K, typename V>
 typename PriorityQueue<K, V>::size_type PriorityQueue<K, V>::size() const {
+   std::cout << "map_key size = " << map_key.size() << " map_value size = " << map_value.size() << std::endl;
    return counter;
 }
 
@@ -395,51 +381,88 @@ void PriorityQueue<K, V>::swap(PriorityQueue<K, V>& queue) {
    std::swap(counter, queue.counter);
 }
 
+
 template<typename K, typename V>
-bool operator==(const PriorityQueue<K, V>& lhs, 
-                const PriorityQueue<K, V>& rhs) {
-   if (lhs.size() != rhs.size())
+bool PriorityQueue<K, V>::operator==(const PriorityQueue<K, V>& queue) const {
+   if (size() != queue.size())
       return false;
-   // TODO czy porównanie tylko na mapach kluczy wystarczy ?
-   return std::equal(
-      lhs.map_key.begin(), 
-      lhs.map_key.end(), 
-      rhs.map_key.begin(),
-      PriorityQueue<K, V>::equalMaps);
+   if (map_key.size() != queue.map_key.size()) {
+      return false;
+   }
+   auto lhs_it = map_key.begin();
+   auto rhs_it = queue.map_key.begin();
+   while (lhs_it != map_key.end()) {
+      if (*(lhs_it->first) != *(rhs_it->first)) {
+         return false;
+      } else {
+         if (lhs_it->second.size() != rhs_it->second.size()) {
+            return false;
+         } else {
+            auto lhs_set_it = lhs_it->second.begin();
+            auto rhs_set_it = rhs_it->second.begin();
+            while (lhs_set_it != lhs_it->second.end()) {
+               if (**lhs_set_it != **rhs_set_it) {
+                  return false;
+               } else {
+                  ++lhs_set_it;
+                  ++rhs_set_it;
+               }
+            }
+         }
+      }
+      ++lhs_it;
+      ++rhs_it;
+   }
+   return true;
 }
 
 template<typename K, typename V>
-bool operator!=(const PriorityQueue<K, V>& lhs, 
-                const PriorityQueue<K, V>& rhs) {
-   return !(lhs == rhs);
+bool PriorityQueue<K, V>::operator<(const PriorityQueue<K, V>& queue) const {
+   auto lhs_it = map_key.begin();
+   auto rhs_it = queue.map_key.begin();
+   while (lhs_it != map_key.end() && rhs_it != queue.map_key.end()) {
+      if (*lhs_it->first == *rhs_it->first) {
+         if (lhs_it->second.size() == rhs_it->second.size()) {
+            auto lhs_set_it = lhs_it->second.begin();
+            auto rhs_set_it = rhs_it->second.begin();
+            while (lhs_set_it != lhs_it->second.end()) {
+               if (**lhs_set_it == **rhs_set_it) {
+                  ++lhs_set_it;
+                  ++rhs_set_it;
+               } else {
+                  return **lhs_set_it < **rhs_set_it;
+               }
+            }
+         } else {
+            return lhs_it->second.size() > rhs_it->second.size();
+         }
+      } else {
+         return *lhs_it->first < *rhs_it->first;
+      }
+      ++lhs_it;
+      ++rhs_it;
+   }
+   return (lhs_it == map_key.end() && rhs_it != queue.map_key.end());
 }
 
 template<typename K, typename V>
-bool operator<(const PriorityQueue<K, V>& lhs, 
-               const PriorityQueue<K, V>& rhs) {
-
-   return std::lexicographical_compare(
-      lhs.map_key.begin(), lhs.map_key.end(),
-      rhs.map_key.begin(), rhs.map_key.end(), 
-      PriorityQueue<K, V>::lessMaps);
+bool PriorityQueue<K, V>::operator!=(const PriorityQueue<K, V>& queue) const {
+   return !(*this == queue);
 }
 
 template<typename K, typename V>
-bool operator>(const PriorityQueue<K, V>& lhs, 
-               const PriorityQueue<K, V>& rhs) {
-   return rhs < lhs;
+bool PriorityQueue<K, V>::operator>(const PriorityQueue<K, V>& queue) const {
+   return queue < *this;
 }
 
 template<typename K, typename V>
-bool operator<=(const PriorityQueue<K, V>& lhs, 
-                const PriorityQueue<K, V>& rhs) {
-   return !(rhs < lhs);
+bool PriorityQueue<K, V>::operator>=(const PriorityQueue<K, V>& queue) const {
+   return !(*this < queue);
 }
 
 template<typename K, typename V>
-bool operator>=(const PriorityQueue<K, V>& lhs, 
-                const PriorityQueue<K, V>& rhs) {
-   return !(lhs < rhs);
+bool PriorityQueue<K, V>::operator<=(const PriorityQueue<K, V>& queue) const {
+   return !(*this > queue);
 }
 
 #endif /* __PRIORITYQUEUE_HH__ */

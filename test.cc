@@ -19,7 +19,7 @@ int main() {
     AA.insert(1, 1);
     assert(AA == TT);
     TT.insert(1, 1);
-    TT.insert(1, 1);
+    TT.insert(1, 1); 
     TT.insert(1, 1);
 }
     PriorityQueue<int, int> P = f(PriorityQueue<int, int>());
@@ -66,6 +66,8 @@ int main() {
     R.insert(1, 100);
     R.insert(2, 100);
     R.insert(3, 300);
+    
+    assert(Q.empty());
 
     PriorityQueue<int, int> S;
     S = R;
@@ -127,17 +129,31 @@ int main() {
     assert(S.minValue() == 1);
     assert(S.maxValue() == 16);
     assert(T.empty());
+    
+    std::cout << "here\n";
 
     S = R;
     swap(R, T);
 
     assert(T == S);
     assert(T != R);
+    
+    std::cout << "yoho\n";
 
     R = std::move(S);
+    
+    std:: cout << "hue\n";
+    
+    std:: cout << S.size() << std::endl;
+    //S.insert(2, 3);
     assert(T != S);
+    
+    std:: cout << "ho\n";
+    
     assert(T == R);
-
+    
+    std::cout << "there\n";
+    
 {
     PriorityQueue<int, int> PP;
     PriorityQueue<int, int> QQ;
@@ -149,6 +165,9 @@ int main() {
     SS.insert(1, 42);
     assert(QQ < SS);
     assert(SS < PP);
+    printf("%zu %zu\n", PP.size(), SS.size());
+    
+    printf("%d\n", PP < SS);
     assert(QQ < PP);
     assert(QQ <= SS);
     assert(SS <= PP);
