@@ -182,6 +182,7 @@ public:
       auto it = map_key.begin();
       while (it != map_key.end()) {
          K key = *it->first;
+         std::cout << "the key is: " << key << std::endl;
          auto set_it = it->second.begin();
          while (set_it != it->second.end()) {
             std::cout << key << " -> " << **set_it << std::endl;
@@ -189,16 +190,41 @@ public:
          }
          ++it;
       }
+      std::cout << "map_key printed from back:\n";
+      auto it_r = map_key.crbegin();
+      while (it_r != map_key.crend()) {
+         K key = *it_r->first;
+         std::cout << "the key is: " << key << std::endl;
+         auto set_it = it_r->second.crbegin();
+         while (set_it != it_r->second.crend()) {
+            std::cout << key << " -> " << **set_it << std::endl;
+            ++set_it;
+         }
+         ++it_r;
+      }
       std::cout << "values_map:\n";
       it = map_value.begin();
       while (it != map_value.end()) {
          V key = *it->first;
+         std::cout << "the key is: " << key << std::endl;
          auto set_it = it->second.begin();
          while (set_it != it->second.end()) {
             std::cout << key << " -> " << **set_it << std::endl;
             ++set_it;
          }
          ++it;
+      }
+      std::cout << "values_map from back:\n";
+      it_r = map_value.crbegin();
+      while (it_r != map_value.crend()) {
+         std::cout << "the key is: " << *it_r->first << std::endl;
+         V key = *it_r->first;
+         auto set_it = it_r->second.crbegin();
+         while (set_it != it_r->second.crend()) {
+            std::cout << key << " -> " << **set_it << std::endl;
+            ++set_it;
+         }
+         ++it_r;
       }
    }
 
@@ -228,17 +254,6 @@ private:
    using set_value_t = std::multiset<ptr_value_t, LessPtr<ptr_value_t>>;
    using map_key_t = std::map<ptr_key_t, set_value_t, LessPtr<ptr_key_t>>;
    using map_value_t = std::map<ptr_value_t, set_key_t, LessPtr<ptr_value_t>>;
-
-   static bool lessMaps(const std::pair<ptr_key_t, set_value_t>& lhs, 
-                        const std::pair<ptr_key_t, set_value_t>& rhs) {
-      if (*lhs.first == *rhs.first) 
-         return std::lexicographical_compare(
-            lhs.second.begin(), lhs.second.end(),
-            rhs.second.begin(), lhs.second.end(),
-            [](const ptr_value_t& x, const ptr_value_t& y) -> bool
-            {std::cout << *x << ' ' << *y << std::endl; return *x < *y;});
-      return *lhs.first < *rhs.first;
-   } 
 
    map_key_t map_key;
    map_value_t map_value;
@@ -289,8 +304,9 @@ template<typename K, typename V>
 void PriorityQueue<K, V>::insert(const K& key, const V& value) {
    ptr_key_t tmp_k = std::make_shared<K>(key);
    ptr_value_t tmp_v = std::make_shared<V>(value);
-
    map_key[tmp_k].insert(tmp_v);
+   tmp_k = std::make_shared<K>(key);
+   tmp_v = std::make_shared<V>(value);
    map_value[tmp_v].insert(tmp_k);
 /*
 //TEST
@@ -373,14 +389,19 @@ void PriorityQueue<K, V>::changeValue(const K& key, const V& value) {
    if (it_k == map_key.end())
       throw PriorityQueueNotFoundException();
    // Usunięcie starej i wstawienie nowej wartości do setu.
-   set_value_t set_v = it_k->second;
-   ptr_value_t tmp_v = *set_v.begin();
-   set_v.erase(set_v.begin());
+   //set_value_t set_v = it_k->second;
+   ptr_value_t tmp_v = *it_k->second.begin();
+
+   it_k->second.erase(it_k->second.begin());
    ptr_value_t new_v = std::make_shared<V>(value);
-   set_v.insert(new_v);
+   it_k->second.insert(new_v);
+   
    // Usunięcie klucza spod starej wartości w secie kluczy 
    // i dodanie go do setu nowej wartości.
    map_value.find(tmp_v)->second.erase(tmp_k);
+   if (map_value.find(tmp_v)->second.empty()) {
+      map_value.erase(tmp_v);
+   }
    map_value[new_v].insert(tmp_k);
 }
 

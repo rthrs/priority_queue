@@ -39,11 +39,11 @@ int testInt() {
     assert(P.maxValue() == 42);
     assert(P.minKey() == 2);
     assert(P.minValue() == 13);
-
-
+    
     P.print();
-
+  
     P.changeValue(1, 43);
+    P.print(); 
     assert(P.size() == 2);
     assert(P.maxKey() == 1);
     assert(P.maxValue() == 43);
@@ -53,14 +53,19 @@ int testInt() {
     // back to previous
     P.changeValue(1, 42);
     P.print();
+    std::cout << "b\n";
     assert(P.size() == 2);
-    assert(P.maxKey() == 1);
+    std::cout << "d\n";
     assert(P.maxValue() == 42);
+    assert(P.maxKey() == 1);
+    std::cout << "e\n"; 
+    assert(P.maxValue() == 42);
+    std::cout << "c\n";
     assert(P.minKey() == 2);
     assert(P.minValue() == 13);
 
-
-
+    std::cout << "a\n";
+    
     PriorityQueue<int, int> Q(f(P));
 
     Q.deleteMax();
@@ -91,6 +96,8 @@ int testInt() {
         assert(!"exception missing!");
     }
     S.changeValue(2, 200);
+    
+    std::cout << "hue\n";
 
     try
     {
@@ -224,7 +231,7 @@ void testCompare() {
     P.insert(42, t);
     P.insert(50, t);
     P.insert(32, t);
-    assert(P.size() == 5);
+    assert(P.size() == 5); 
 
     try {
         THROW_NOW_THIS_IS_MADNESS = true;
@@ -245,7 +252,7 @@ void testCompare() {
 
     THROW_NOW_THIS_IS_MADNESS = false;
 }
-/*
+/* 
 
 void testCopy()  {
     THROW_NOW_THIS_IS_MADNESS = false;
@@ -475,9 +482,9 @@ void testOutOfMemory1() {
 
 int main() {
     testInt();
-    /*testCopy();
+    //testCopy();
     testCompare();
-    testRandom();
+    /*testRandom();
     testWeirdThings();
     testOutOfMemory1();*/
 
