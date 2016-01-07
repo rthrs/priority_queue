@@ -410,21 +410,28 @@ void PriorityQueue<K, V>::changeValue(const K& key, const V& value) {
    auto it_k = map_key.find(tmp_k); // log(size)
    if (it_k == map_key.end())
       throw PriorityQueueNotFoundException();
-   // Usunięcie starej i wstawienie nowej wartości do setu.
-   //set_value_t set_v = it_k->second;
+   // Uzyskanie iteratorow do elementow, ktore będą usuwane
+   // przy pomyślnym insercie nowego elementu.
    ptr_value_t tmp_v = *it_k->second.begin();
-
-   it_k->second.erase(it_k->second.begin());
-   ptr_value_t new_v = std::make_shared<V>(value);
-   it_k->second.insert(new_v);
-   
-   // Usunięcie klucza spod starej wartości w secie kluczy 
-   // i dodanie go do setu nowej wartości.
-   map_value.find(tmp_v)->second.erase(tmp_k);
-   if (map_value.find(tmp_v)->second.empty()) {
-      map_value.erase(tmp_v);
+   auto map_value_it = map_value.find(tmp_v);
+   typename set_key_t::const_iterator set_it;
+   bool single = (map_value_it->second.size() == 1) ? true : false;
+   if (!single) {
+      set_it = map_value_it->second.find(tmp_k);
    }
-   map_value[new_v].insert(tmp_k);
+   
+   insert(key, value);
+   --counter;
+   
+   // Usunięcie elementów przy zakończonym sukcesem insercie,
+   // ponieważ begin() oraz erase() dla iteratorów są
+   // no-throw, tu wyjątek nie może się pojawić.
+   it_k->second.erase(it_k->second.begin());
+   if (single) {
+      map_value.erase(map_value_it);
+   } else {
+      map_value_it->second.erase(set_it);
+   }
 }
 
 template<typename K, typename V>
