@@ -22,17 +22,7 @@ int main() {
     TT.insert(1, 2);
     AA.insert(1, 1);
     BB.insert(1, 2);
-std::cout << "TT---------------------\n";
-TT.print();
-std::cout << "AA---------------------\n";
-AA.print();
-std::cout << "BB---------------------\n";
-BB.print();
-
-
-   AA.merge(BB);
-std::cout << "AA merge BB ---------------------\n";
-AA.print();
+    AA.merge(BB);
 
     assert(AA == TT);
     TT.insert(1, 1);
@@ -50,19 +40,6 @@ AA.print();
     assert(P.maxValue() == 42);
     assert(P.minKey() == 2);
     assert(P.minValue() == 13);
-/*{
-    P.insert(1, 42);
-
-    assert(P.size() == 3);
-
-    P.insert(1, 100);
-    P.insert(2, 2);
-
-    assert(P.maxKey() == 1);
-    assert(P.maxValue() == 100);
-    assert(P.minKey() == 2);
-    assert(P.minValue() == 2);
-}*/
 
     PriorityQueue<int, int> Q(f(P));
 
@@ -146,30 +123,18 @@ AA.print();
     assert(S.minValue() == 1);
     assert(S.maxValue() == 16);
     assert(T.empty());
-    
-    std::cout << "here\n";
-
     S = R;
     swap(R, T);
 
     assert(T == S);
     assert(T != R);
     
-    std::cout << "yoho\n";
-
     R = std::move(S);
-    
-    std:: cout << "hue\n";
     
     std:: cout << S.size() << std::endl;
     //S.insert(2, 3);
     assert(T != S);
-    
-    std:: cout << "ho\n";
-    
     assert(T == R);
-    
-    std::cout << "there\n";
     
 {
     PriorityQueue<int, int> PP;
